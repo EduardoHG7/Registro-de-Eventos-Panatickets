@@ -1,5 +1,11 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
   const url = process.env.APPS_SCRIPT_URL;
   if (!url) {
@@ -7,8 +13,15 @@ export default async function handler(req, res) {
   }
 
   try {
-    const upstream = await fetch(url, { method: 'GET' });
+    const options = { method: req.method };
+    if (req.method === 'POST') {
+      options.headers = { 'Content-Type': 'application/json' };
+      options.body = JSON.stringify(req.body);
+    }
+
+    const upstream = await fetch(url, options);
     const text = await upstream.text();
+
     try {
       const data = JSON.parse(text);
       res.status(200).json(data);

@@ -473,10 +473,7 @@
 </div>
 
 <script>
-// ── CONFIGURACIÓN ─────────────────────────────────────────────────────────────
-// Reemplaza este valor con tu URL de Google Apps Script Web App
-const APPS_SCRIPT_URL = 'PEGAR_URL_APPS_SCRIPT_AQUI';
-// ─────────────────────────────────────────────────────────────────────────────
+const APPS_SCRIPT_URL = '/api/registros';
 
 let guestCount = 1;
 
@@ -607,12 +604,12 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
   try {
     const res = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    // no-cors siempre retorna opaque, asumimos éxito si no hay excepción
+    if (!res.ok) throw new Error('Error del servidor');
+
     document.getElementById('form-view').style.display = 'none';
     document.getElementById('success-screen').style.display = 'block';
 
