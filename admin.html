@@ -691,6 +691,14 @@ function doGet(e) {
         <div class="stat-label">Asistentes Totales</div>
         <div class="stat-val" id="statTotal">—</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-label">Inv. Hombres</div>
+        <div class="stat-val" style="color:#91A7FF" id="statHombres">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Inv. Mujeres</div>
+        <div class="stat-val" style="color:#F783AC" id="statMujeres">—</div>
+      </div>
     </div>
 
     <!-- Controls -->
@@ -881,10 +889,20 @@ function actualizarStats() {
   const conInv = registrosFiltrados.filter(r => r.tieneInvitados === 'Sí').length;
   const totInv = registrosFiltrados.reduce((s, r) => s + (r.cantInvitados || 0), 0);
 
+  let hombres = 0, mujeres = 0;
+  registrosFiltrados.forEach(r => {
+    r.invitados.forEach(inv => {
+      if (inv.genero === 'Masculino') hombres++;
+      else if (inv.genero === 'Femenino') mujeres++;
+    });
+  });
+
   document.getElementById('statSocios').textContent = socios;
   document.getElementById('statConInv').textContent = conInv;
   document.getElementById('statTotInv').textContent = totInv;
   document.getElementById('statTotal').textContent = socios + totInv;
+  document.getElementById('statHombres').textContent = hombres;
+  document.getElementById('statMujeres').textContent = mujeres;
   document.getElementById('countBadge').textContent = `${socios} registro${socios !== 1 ? 's' : ''}`;
 }
 
