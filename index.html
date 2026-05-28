@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro – Los Miserables | Panatickets</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #D42B2B;
+    --red-dark: #A82020;
+    --white: #FFFFFF;
+    --off-white: #F9F7F4;
+    --gray-100: #F2F0ED;
+    --gray-300: #D4D0CB;
+    --gray-500: #9B9690;
+    --gray-700: #4A4744;
+    --black: #1A1917;
+    --gold: #C4A35A;
+    --green: #2F9E44;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--off-white);
+    color: var(--black);
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* Hero band */
+  .hero {
+    background: var(--black);
+    padding: 44px 20px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 120%, rgba(212,43,43,0.18) 0%, transparent 70%);
+  }
+
+  .hero-inner { position: relative; z-index: 1; }
+
+  .logo-img {
+    height: 62px;
+    margin-bottom: 28px;
+    filter: drop-shadow(0 2px 14px rgba(212,43,43,0.5));
+  }
+
+  .pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(196,163,90,0.35);
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 9vw, 64px);
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.0;
+    margin-bottom: 10px;
+  }
+
+  .hero-title em { font-style: italic; color: var(--gold); }
+
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 0;
+  }
+
+  /* Wrapper */
+  .wrapper {
+    max-width: 640px;
+    margin: -24px auto 0;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Card */
+  .card {
+    background: var(--white);
+    border-radius: 3px;
+    padding: 44px 44px 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 12px 48px rgba(0,0,0,0.10);
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+
+  @media (max-width: 520px) { .card { padding: 28px 22px 28px; } }
+
+  .card-intro {
+    font-size: 13.5px;
+    font-weight: 300;
+    color: var(--gray-500);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+
+  /* Section label */
+  .sec-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--gray-100); }
+
+  /* Fields */
+  .field-group { margin-bottom: 20px; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 460px) { .field-row { grid-template-columns: 1fr; } }
+
+  label {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--gray-700);
+    margin-bottom: 7px;
+  }
+
+  input[type="text"], select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: var(--black);
+    background: var(--white);
+    transition: border-color 0.18s, box-shadow 0.18s;
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  input[type="text"]:focus, select:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(212,43,43,0.08);
+  }
+
+  input::placeholder { color: var(--gray-300); font-weight: 300; }
+
+  /* Radio buttons */
+  .radio-group { display: flex; gap: 10px; }
+
+  .radio-option { flex: 1; }
+  .radio-option input[type="radio"] { display: none; }
+  .radio-option label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    transition: all 0.16s;
+  }
+  .radio-option input[type="radio"]:checked + label {
+    border-color: var(--red);
+    background: var(--red);
+    color: var(--white);
+  }
+  .radio-option label:hover { border-color: var(--red); color: var(--red); }
+  .radio-option input[type="radio"]:checked + label:hover { color: white; }
+
+  /* Counter */
+  .count-wrap {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 2px;
+    overflow: hidden;
+    background: white;
+    max-width: 150px;
+  }
+  .count-btn {
+    width: 44px; height: 46px;
+    border: none; background: none;
+    font-size: 22px; color: var(--gray-500);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+  }
+  .count-btn:hover { background: var(--red); color: white; }
+  .count-display {
+    flex: 1; text-align: center;
+    font-size: 20px; font-weight: 300;
+    border-left: 1.5px solid var(--gray-300);
+    border-right: 1.5px solid var(--gray-300);
+    line-height: 46px;
+    user-select: none;
+  }
+
+  /* Guest section */
+  #guests-section {
+    background: var(--gray-100);
+    border-left: 3px solid var(--red);
+    padding: 26px 26px 18px;
+    margin-top: 24px;
+    animation: fadeUp 0.3s ease both;
+  }
+  @media (max-width: 480px) { #guests-section { padding: 18px 14px 14px; } }
+
+  .guest-block {
+    border-bottom: 1px dashed var(--gray-300);
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    animation: fadeUp 0.25s ease both;
+  }
+  .guest-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .guest-num-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 2px; color: var(--red);
+    text-transform: uppercase; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .guest-num-label span {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--red); color: white;
+    font-size: 11px; font-weight: 500;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .guest-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 120px;
+    gap: 12px;
+  }
+  @media (max-width: 480px) { .guest-fields { grid-template-columns: 1fr; } }
+
+  .select-wrap { position: relative; }
+  .select-wrap::after {
+    content: '▾'; position: absolute;
+    right: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--gray-500); pointer-events: none; font-size: 12px;
+  }
+  .select-wrap select { padding-right: 32px; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--gray-100); margin: 28px 0; }
+
+  /* Submit */
+  .submit-area { text-align: center; padding-top: 6px; }
+
+  .btn-submit {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--red); color: white; border: none;
+    padding: 15px 48px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px; font-weight: 500; letter-spacing: 3px;
+    text-transform: uppercase; cursor: pointer; border-radius: 2px;
+    transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+    box-shadow: 0 4px 20px rgba(212,43,43,0.3);
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-submit:hover { background: var(--red-dark); transform: translateY(-1px); box-shadow: 0 6px 28px rgba(212,43,43,0.4); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { background: var(--gray-300); box-shadow: none; cursor: not-allowed; transform: none; }
+
+  /* Loading spinner */
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  /* Success screen */
+  #success-screen {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .success-icon {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: #F0FFF4;
+    border: 2px solid #82C99A;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 30px;
+  }
+
+  .success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px; font-weight: 600;
+    color: var(--black); margin-bottom: 10px;
+  }
+
+  .success-sub {
+    font-size: 14px; font-weight: 300;
+    color: var(--gray-500); line-height: 1.6;
+  }
+
+  /* Error */
+  input.err, select.err { border-color: var(--red) !important; background: #fff8f8 !important; }
+  .err-msg { font-size: 11px; color: var(--red); margin-top: 5px; }
+
+  /* Error banner */
+  #error-banner {
+    display: none;
+    background: #FFF5F5;
+    border: 1.5px solid #FCA5A5;
+    border-radius: 2px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #B91C1C;
+    font-weight: 400;
+  }
+
+  .hidden { display: none !important; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Footer */
+  .footer {
+    text-align: center; margin-top: 32px;
+    font-size: 10.5px; color: var(--gray-500); letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-inner">
+    <img src="LOGO_PANATICKETS_ai_3-01.png" class="logo-img" alt="Panatickets"
+         onerror="this.style.display='none'">
+    <div class="pill">Formulario de Registro</div>
+    <h1 class="hero-title"><em>Los Miserables</em></h1>
+    <p class="hero-sub">Por favor llena los datos para realizar tu registro</p>
+  </div>
+</div>
+
+<div class="wrapper">
+  <div class="card">
+
+    <!-- Form -->
+    <div id="form-view">
+      <p class="card-intro">
+        Completa los campos a continuación con tu información y la de tus invitados.
+        Todos los campos son obligatorios para confirmar tu asistencia.
+      </p>
+
+      <div id="error-banner"></div>
+
+      <form id="regForm" novalidate>
+
+        <div class="sec-label">Datos del Socio</div>
+
+        <div class="field-row field-group">
+          <div>
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" placeholder="Tu nombre" autocomplete="given-name">
+          </div>
+          <div>
+            <label for="apellido">Apellido</label>
+            <input type="text" id="apellido" placeholder="Tu apellido" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="field-row field-group">
+          <div>
+            <label for="numSocio">Número de Socio</label>
+            <input type="text" id="numSocio" placeholder="Ej. PT-00123">
+          </div>
+          <div>
+            <label for="numMesa">Número de Mesa</label>
+            <input type="text" id="numMesa" placeholder="Ej. 12">
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="sec-label">Invitados</div>
+
+        <div class="field-group">
+          <label>¿Llevas invitados?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="invSi" name="tieneInvitados" value="si">
+              <label for="invSi">Sí</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="invNo" name="tieneInvitados" value="no" checked>
+              <label for="invNo">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="cantidadSection" class="field-group hidden">
+          <label>¿Cuántos invitados van contigo?</label>
+          <div class="count-wrap">
+            <button type="button" class="count-btn" id="btnMinus">−</button>
+            <div class="count-display" id="countDisplay">1</div>
+            <button type="button" class="count-btn" id="btnPlus">+</button>
+          </div>
+        </div>
+
+        <div id="guests-section" class="hidden">
+          <div class="sec-label" style="margin-bottom:20px;">Datos de Invitados</div>
+          <div id="guestFields"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="submit-area">
+          <button type="submit" class="btn-submit" id="btnSubmit">
+            <div class="spinner" id="spinner"></div>
+            <span id="btnText">Confirmar Registro</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Success -->
+    <div id="success-screen">
+      <div class="success-icon">✓</div>
+      <h2 class="success-title">¡Registro Confirmado!</h2>
+      <p class="success-sub">Tu asistencia al evento <em>Los Miserables</em><br>ha sido registrada exitosamente.<br><br>Te esperamos en el evento.</p>
+    </div>
+
+  </div>
+  <div class="footer">Panatickets.com &nbsp;·&nbsp; Los Miserables &nbsp;·&nbsp; 2025</div>
+</div>
+
+<script>
+// ── CONFIGURACIÓN ─────────────────────────────────────────────────────────────
+// Reemplaza este valor con tu URL de Google Apps Script Web App
+const APPS_SCRIPT_URL = 'PEGAR_URL_APPS_SCRIPT_AQUI';
+// ─────────────────────────────────────────────────────────────────────────────
+
+let guestCount = 1;
+
+// Counter
+document.getElementById('btnMinus').addEventListener('click', () => {
+  if (guestCount > 1) { guestCount--; sync(); }
+});
+document.getElementById('btnPlus').addEventListener('click', () => {
+  if (guestCount < 20) { guestCount++; sync(); }
+});
+
+function sync() {
+  document.getElementById('countDisplay').textContent = guestCount;
+  renderGuests();
+}
+
+// Toggle invitados
+document.querySelectorAll('input[name="tieneInvitados"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const si = document.getElementById('invSi').checked;
+    document.getElementById('cantidadSection').classList.toggle('hidden', !si);
+    document.getElementById('guests-section').classList.toggle('hidden', !si);
+    if (si) renderGuests();
+  });
+});
+
+function renderGuests() {
+  const c = document.getElementById('guestFields');
+  c.innerHTML = '';
+  for (let i = 1; i <= guestCount; i++) {
+    const b = document.createElement('div');
+    b.className = 'guest-block';
+    b.innerHTML = `
+      <div class="guest-num-label"><span>${i}</span> Invitado ${i}</div>
+      <div class="guest-fields">
+        <div>
+          <label>Nombre</label>
+          <input type="text" id="gN${i}" placeholder="Nombre">
+        </div>
+        <div>
+          <label>Apellido</label>
+          <input type="text" id="gA${i}" placeholder="Apellido">
+        </div>
+        <div>
+          <label>Género</label>
+          <div class="select-wrap">
+            <select id="gG${i}">
+              <option value="">—</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+            </select>
+          </div>
+        </div>
+      </div>`;
+    c.appendChild(b);
+  }
+}
+
+// Validation
+function validar() {
+  let ok = true;
+  document.querySelectorAll('.err').forEach(e => e.classList.remove('err'));
+  document.querySelectorAll('.err-msg').forEach(e => e.remove());
+
+  ['nombre','apellido','numSocio','numMesa'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el.value.trim()) { markErr(el, 'Campo obligatorio'); ok = false; }
+  });
+
+  if (document.getElementById('invSi').checked) {
+    for (let i = 1; i <= guestCount; i++) {
+      const n = document.getElementById(`gN${i}`);
+      const a = document.getElementById(`gA${i}`);
+      const g = document.getElementById(`gG${i}`);
+      if (!n.value.trim()) { markErr(n, 'Obligatorio'); ok = false; }
+      if (!a.value.trim()) { markErr(a, 'Obligatorio'); ok = false; }
+      if (!g.value) { markErr(g, 'Selecciona'); ok = false; }
+    }
+  }
+  return ok;
+}
+
+function markErr(el, msg) {
+  el.classList.add('err');
+  const s = document.createElement('span');
+  s.className = 'err-msg'; s.textContent = msg;
+  el.parentNode.appendChild(s);
+}
+
+// Submit
+document.getElementById('regForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!validar()) return;
+
+  const tieneInv = document.getElementById('invSi').checked;
+  const invitados = [];
+  if (tieneInv) {
+    for (let i = 1; i <= guestCount; i++) {
+      invitados.push({
+        nombre: document.getElementById(`gN${i}`).value.trim(),
+        apellido: document.getElementById(`gA${i}`).value.trim(),
+        genero: document.getElementById(`gG${i}`).value
+      });
+    }
+  }
+
+  const payload = {
+    fechaHora: new Date().toLocaleString('es-PA'),
+    nombre: document.getElementById('nombre').value.trim(),
+    apellido: document.getElementById('apellido').value.trim(),
+    numSocio: document.getElementById('numSocio').value.trim(),
+    numMesa: document.getElementById('numMesa').value.trim(),
+    tieneInvitados: tieneInv ? 'Sí' : 'No',
+    cantInvitados: tieneInv ? guestCount : 0,
+    invitados
+  };
+
+  // Loading state
+  const btn = document.getElementById('btnSubmit');
+  const txt = document.getElementById('btnText');
+  const spin = document.getElementById('spinner');
+  btn.disabled = true;
+  spin.style.display = 'block';
+  txt.textContent = 'Enviando...';
+
+  document.getElementById('error-banner').style.display = 'none';
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    // no-cors siempre retorna opaque, asumimos éxito si no hay excepción
+    document.getElementById('form-view').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+
+  } catch (err) {
+    const eb = document.getElementById('error-banner');
+    eb.style.display = 'block';
+    eb.textContent = 'Ocurrió un error al enviar tu registro. Por favor intenta de nuevo.';
+    btn.disabled = false;
+    spin.style.display = 'none';
+    txt.textContent = 'Confirmar Registro';
+  }
+});
+</script>
+</body>
+</html>
