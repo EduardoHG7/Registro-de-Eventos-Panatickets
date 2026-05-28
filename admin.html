@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – Los Miserables | Panatickets</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #D42B2B;
+    --red-dark: #A82020;
+    --bg: #0F0E0D;
+    --surface: #1A1917;
+    --surface2: #242220;
+    --surface3: #2E2C29;
+    --border: #333230;
+    --white: #FFFFFF;
+    --gray-100: #F2F0ED;
+    --gray-300: #D4D0CB;
+    --gray-400: #A09C97;
+    --gray-500: #6B6864;
+    --gold: #C4A35A;
+    --green: #2F9E44;
+    --blue: #3B5BDB;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+  }
+
+  /* ── LOGIN SCREEN ─────────────────────────────────── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--bg);
+    position: relative;
+  }
+
+  #login-screen::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(212,43,43,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 52px 48px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @media (max-width: 460px) { .login-card { padding: 36px 24px; } }
+
+  .login-logo {
+    height: 52px;
+    margin-bottom: 28px;
+    filter: drop-shadow(0 0 16px rgba(212,43,43,0.4));
+  }
+
+  .login-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .login-sub {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-bottom: 36px;
+  }
+
+  .login-field { text-align: left; margin-bottom: 20px; }
+
+  .login-field label {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 8px;
+  }
+
+  .login-field input {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+    -webkit-appearance: none;
+  }
+
+  .login-field input:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(212,43,43,0.12);
+  }
+
+  .login-field input::placeholder { color: var(--gray-500); }
+
+  .btn-login {
+    width: 100%;
+    padding: 14px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.18s, box-shadow 0.18s;
+    box-shadow: 0 4px 20px rgba(212,43,43,0.3);
+    margin-top: 8px;
+  }
+
+  .btn-login:hover { background: var(--red-dark); }
+
+  #login-error {
+    display: none;
+    margin-top: 14px;
+    font-size: 12px;
+    color: #FC8181;
+    letter-spacing: 0.5px;
+  }
+
+  .lock-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 20px;
+    background: var(--surface2);
+  }
+
+  /* ── MAIN APP ──────────────────────────────────────── */
+  #app { display: none; }
+
+  /* Topbar */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .topbar-logo {
+    height: 32px;
+    filter: drop-shadow(0 0 8px rgba(212,43,43,0.3));
+  }
+
+  .topbar-divider {
+    width: 1px; height: 28px;
+    background: var(--border);
+  }
+
+  .topbar-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .badge-panel {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .btn-logout {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--gray-400);
+    padding: 6px 14px;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+  /* Main */
+  .main { padding: 28px 28px 60px; max-width: 1300px; margin: 0 auto; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.4s 0.1s ease both;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 18px 20px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+  }
+
+  .stat-val {
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .stat-val.red { color: var(--red); }
+  .stat-val.gold { color: var(--gold); }
+  .stat-val.green { color: #69DB7C; }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+    animation: fadeUp 0.4s 0.15s ease both;
+  }
+
+  .controls-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-400);
+  }
+
+  .count-badge {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--gray-400);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .controls-right {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid;
+  }
+
+  .btn-excel {
+    background: transparent;
+    border-color: #2F9E44;
+    color: #69DB7C;
+  }
+  .btn-excel:hover { background: rgba(47,158,68,0.1); }
+
+  .btn-refresh {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--gray-400);
+  }
+  .btn-refresh:hover { border-color: var(--gray-400); color: var(--white); }
+
+  /* Search */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 16px;
+    animation: fadeUp 0.4s 0.2s ease both;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 11px 16px 11px 42px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.18s;
+  }
+  .search-input:focus { border-color: var(--red); }
+  .search-input::placeholder { color: var(--gray-500); }
+
+  .search-icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-500);
+    font-size: 15px;
+    pointer-events: none;
+  }
+
+  /* Table */
+  .table-container {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    animation: fadeUp 0.4s 0.25s ease both;
+  }
+
+  .table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  thead th {
+    background: var(--surface2);
+    color: var(--gray-400);
+    padding: 11px 16px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+  }
+  thead th:hover { color: var(--white); }
+
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  tbody td { padding: 12px 16px; color: var(--gray-300); }
+  tbody td.bold { font-weight: 500; color: var(--white); }
+  tbody td.mono { font-family: 'Jost', monospace; font-size: 12px; color: var(--gray-400); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .badge-si { background: rgba(47,158,68,0.15); color: #69DB7C; border: 1px solid rgba(47,158,68,0.25); }
+  .badge-no { background: var(--surface3); color: var(--gray-400); border: 1px solid var(--border); }
+  .badge-m { background: rgba(59,91,219,0.15); color: #91A7FF; border: 1px solid rgba(59,91,219,0.25); }
+  .badge-f { background: rgba(194,37,92,0.15); color: #F783AC; border: 1px solid rgba(194,37,92,0.25); }
+
+  .guest-list { white-space: normal; min-width: 200px; }
+  .guest-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 12px; }
+  .guest-item:last-child { margin-bottom: 0; }
+
+  .row-num {
+    color: var(--gray-500);
+    font-size: 11px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 64px 20px;
+    color: var(--gray-500);
+  }
+
+  .empty-icon { font-size: 40px; margin-bottom: 14px; opacity: 0.4; }
+  .empty-text { font-size: 14px; font-weight: 300; }
+
+  /* Loading */
+  .loading-row td {
+    text-align: center;
+    padding: 48px !important;
+    color: var(--gray-500) !important;
+    font-style: italic;
+  }
+
+  /* Setup guide */
+  .setup-banner {
+    background: var(--surface);
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    border-radius: 3px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .setup-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .setup-steps {
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .setup-steps li {
+    counter-increment: step;
+    padding: 6px 0 6px 32px;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--gray-300);
+    line-height: 1.5;
+    position: relative;
+  }
+
+  .setup-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(196,163,90,0.2);
+    border: 1px solid rgba(196,163,90,0.4);
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .setup-steps code {
+    background: var(--surface3);
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: #FC8181;
+    font-family: 'Courier New', monospace;
+  }
+
+  .setup-steps a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .setup-steps a:hover { text-decoration: underline; }
+
+  .btn-dismiss {
+    margin-top: 14px;
+    background: none;
+    border: 1px solid rgba(196,163,90,0.3);
+    color: var(--gold);
+    padding: 7px 16px;
+    border-radius: 2px;
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-dismiss:hover { background: rgba(196,163,90,0.1); }
+
+  /* Script textarea */
+  .script-box {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #A3E635;
+    margin-top: 10px;
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.6;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ──────────────────────────────────────────── -->
+<div id="login-screen">
+  <div class="login-card">
+    <img src="LOGO_PANATICKETS_ai_3-01.png" class="login-logo" alt="Panatickets"
+         onerror="this.style.display='none'">
+    <div class="lock-icon">🔒</div>
+    <h2 class="login-title">Panel Administrativo</h2>
+    <p class="login-sub">Los Miserables — Acceso Restringido</p>
+    <div class="login-field">
+      <label for="user">Usuario</label>
+      <input type="text" id="user" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label for="pass">Contraseña</label>
+      <input type="password" id="pass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Ingresar al Panel</button>
+    <p id="login-error">Usuario o contraseña incorrectos</p>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────── -->
+<div id="app">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <img src="LOGO_PANATICKETS_ai_3-01.png" class="topbar-logo" alt="PT"
+           onerror="this.style.display='none'">
+      <div class="topbar-divider"></div>
+      <span class="topbar-title">Los Miserables</span>
+    </div>
+    <div class="topbar-right">
+      <span class="badge-panel">Admin Panel</span>
+      <button class="btn-logout" onclick="logout()">Salir</button>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- Setup guide -->
+    <div class="setup-banner" id="setupBanner">
+      <div class="setup-title">⚙ Configuración Inicial — Conectar Google Sheets</div>
+      <ol class="setup-steps">
+        <li>Abre <a href="https://sheets.new" target="_blank">sheets.new</a> y crea una hoja llamada <code>Registros</code></li>
+        <li>En el menú ve a <strong>Extensiones → Apps Script</strong></li>
+        <li>Borra el contenido y pega el siguiente script:</li>
+      </ol>
+      <div class="script-box">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet()
+              .getSheetByName('Registros');
+  var data = JSON.parse(e.postData.contents);
+  var now = data.fechaHora;
+
+  // Fila del socio
+  sheet.appendRow([
+    now,
+    data.nombre,
+    data.apellido,
+    data.numSocio,
+    data.numMesa,
+    data.tieneInvitados,
+    data.cantInvitados,
+    '', '', ''
+  ]);
+
+  // Filas de invitados
+  if (data.invitados && data.invitados.length > 0) {
+    data.invitados.forEach(function(inv) {
+      sheet.appendRow([
+        now,
+        data.nombre + ' ' + data.apellido,
+        '(invitado)',
+        data.numSocio,
+        data.numMesa,
+        '',
+        '',
+        inv.nombre,
+        inv.apellido,
+        inv.genero
+      ]);
+    });
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({status:'ok'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet()
+              .getSheetByName('Registros');
+  var rows = sheet.getDataRange().getValues();
+  return ContentService
+    .createTextOutput(JSON.stringify(rows))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+      <ol class="setup-steps" style="counter-reset: step 3;">
+        <li>Haz clic en <strong>Implementar → Nueva implementación</strong>, elige <strong>Aplicación web</strong>, acceso: <strong>Cualquier usuario</strong></li>
+        <li>Copia la URL que te genera y pégala en <code>APPS_SCRIPT_URL</code> dentro de <code>registro.html</code> <strong>y</strong> en la variable de abajo</li>
+        <li>En la hoja, agrega esta primera fila como encabezado: <code>Fecha/Hora | Nombre Socio | Apellido/Tipo | N°Socio | Mesa | Invitados | Cant | Nombre Inv. | Apellido Inv. | Género</code></li>
+      </ol>
+      <div style="margin-top:12px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <label style="font-size:11px; color:var(--gray-400); letter-spacing:1px; text-transform:uppercase;">URL de tu Apps Script:</label>
+        <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/..."
+               style="flex:1; min-width:200px; padding:8px 12px; background:var(--surface3); border:1px solid var(--border); color:white; font-family:monospace; font-size:12px; border-radius:2px; outline:none;">
+        <button class="btn-dismiss" onclick="saveScriptUrl()">Guardar URL</button>
+      </div>
+      <button class="btn-dismiss" onclick="dismissSetup()" style="margin-top:10px;">Ya lo configuré — ocultar esta guía</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-card">
+        <div class="stat-label">Total Socios</div>
+        <div class="stat-val red" id="statSocios">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Con Invitados</div>
+        <div class="stat-val gold" id="statConInv">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Invitados</div>
+        <div class="stat-val green" id="statTotInv">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Asistentes Totales</div>
+        <div class="stat-val" id="statTotal">—</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="controls-left">
+        <span class="section-title">Registros</span>
+        <span class="count-badge" id="countBadge">—</span>
+      </div>
+      <div class="controls-right">
+        <button class="btn-action btn-refresh" onclick="cargarDatos()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+          Actualizar
+        </button>
+        <button class="btn-action btn-excel" onclick="exportarExcel()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre, número de socio, mesa..." oninput="filtrar()">
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <div class="table-wrap">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha / Hora</th>
+              <th>Nombre del Socio</th>
+              <th>N° Socio</th>
+              <th>Mesa</th>
+              <th>Invitados</th>
+              <th>Cant.</th>
+              <th>Detalle Invitados</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr class="loading-row">
+              <td colspan="8">Cargando registros...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── CONFIGURACIÓN ──────────────────────────────────────────────────────────────
+// Pega aquí tu URL de Google Apps Script (la misma que en index.html)
+let APPS_SCRIPT_URL = localStorage.getItem('pt_script_url') || 'PEGAR_URL_APPS_SCRIPT_AQUI';
+
+// Credenciales admin (cámbialas antes de subir)
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'panatickets2025';
+// ──────────────────────────────────────────────────────────────────────────────
+
+let todosLosRegistros = [];
+let registrosFiltrados = [];
+
+// ── LOGIN ─────────────────────────────────────────────
+function doLogin() {
+  const u = document.getElementById('user').value.trim();
+  const p = document.getElementById('pass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    sessionStorage.setItem('pt_auth', '1');
+    cargarDatos();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pass').value = '';
+  }
+}
+
+document.getElementById('pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('user').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('pass').focus();
+});
+
+function logout() {
+  sessionStorage.removeItem('pt_auth');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('user').value = '';
+  document.getElementById('pass').value = '';
+}
+
+// Auto-login si sesión activa
+if (sessionStorage.getItem('pt_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  cargarDatos();
+}
+
+// ── SETUP GUIDE ───────────────────────────────────────
+function dismissSetup() {
+  localStorage.setItem('pt_setup_dismissed', '1');
+  document.getElementById('setupBanner').style.display = 'none';
+}
+
+function saveScriptUrl() {
+  const url = document.getElementById('scriptUrlInput').value.trim();
+  if (url && url.startsWith('https://')) {
+    APPS_SCRIPT_URL = url;
+    localStorage.setItem('pt_script_url', url);
+    alert('✓ URL guardada. Recarga los datos con el botón Actualizar.');
+  } else {
+    alert('Por favor ingresa una URL válida de Google Apps Script.');
+  }
+}
+
+if (localStorage.getItem('pt_setup_dismissed') === '1') {
+  document.getElementById('setupBanner').style.display = 'none';
+}
+
+if (localStorage.getItem('pt_script_url')) {
+  document.getElementById('scriptUrlInput').value = localStorage.getItem('pt_script_url');
+}
+
+// ── CARGAR DATOS ──────────────────────────────────────
+async function cargarDatos() {
+  document.getElementById('tableBody').innerHTML =
+    '<tr class="loading-row"><td colspan="8">Cargando registros...</td></tr>';
+
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PEGAR_URL_APPS_SCRIPT_AQUI') {
+    document.getElementById('tableBody').innerHTML =
+      `<tr class="loading-row"><td colspan="8">⚠ Configura la URL de Apps Script primero (ver guía arriba)</td></tr>`;
+    return;
+  }
+
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, { method: 'GET', mode: 'cors' });
+    const rawRows = await res.json();
+
+    // Formato: [fecha, nombre, apellido/tipo, numSocio, numMesa, tieneInv, cantInv, nombreInv, apellidoInv, genero]
+    todosLosRegistros = [];
+    let currentSocio = null;
+
+    rawRows.forEach((row, i) => {
+      if (i === 0) return; // Skip header
+      if (!row[0]) return;
+
+      const tipo = row[2];
+      if (tipo === '(invitado)') {
+        if (currentSocio) {
+          currentSocio.invitados.push({
+            nombre: row[7] || '',
+            apellido: row[8] || '',
+            genero: row[9] || ''
+          });
+        }
+      } else {
+        currentSocio = {
+          fechaHora: row[0],
+          nombre: row[1] || '',
+          apellido: row[2] || '',
+          numSocio: row[3] || '',
+          numMesa: row[4] || '',
+          tieneInvitados: row[5] || 'No',
+          cantInvitados: parseInt(row[6]) || 0,
+          invitados: []
+        };
+        todosLosRegistros.push(currentSocio);
+      }
+    });
+
+    registrosFiltrados = [...todosLosRegistros];
+    actualizarStats();
+    renderTabla();
+
+  } catch (err) {
+    document.getElementById('tableBody').innerHTML =
+      `<tr class="loading-row"><td colspan="8">Error al cargar datos: ${err.message}. Verifica la URL del script y los permisos.</td></tr>`;
+  }
+}
+
+// ── STATS ─────────────────────────────────────────────
+function actualizarStats() {
+  const socios = registrosFiltrados.length;
+  const conInv = registrosFiltrados.filter(r => r.tieneInvitados === 'Sí').length;
+  const totInv = registrosFiltrados.reduce((s, r) => s + (r.cantInvitados || 0), 0);
+
+  document.getElementById('statSocios').textContent = socios;
+  document.getElementById('statConInv').textContent = conInv;
+  document.getElementById('statTotInv').textContent = totInv;
+  document.getElementById('statTotal').textContent = socios + totInv;
+  document.getElementById('countBadge').textContent = `${socios} registro${socios !== 1 ? 's' : ''}`;
+}
+
+// ── RENDER TABLA ──────────────────────────────────────
+function renderTabla() {
+  const tbody = document.getElementById('tableBody');
+
+  if (!registrosFiltrados.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8">
+          <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <div class="empty-text">No hay registros que mostrar</div>
+          </div>
+        </td>
+      </tr>`;
+    return;
+  }
+
+  tbody.innerHTML = registrosFiltrados.map((r, i) => `
+    <tr>
+      <td class="row-num">${i + 1}</td>
+      <td class="mono">${r.fechaHora}</td>
+      <td class="bold">${r.nombre} ${r.apellido}</td>
+      <td class="mono">${r.numSocio}</td>
+      <td>${r.numMesa}</td>
+      <td>
+        <span class="badge ${r.tieneInvitados === 'Sí' ? 'badge-si' : 'badge-no'}">
+          ${r.tieneInvitados}
+        </span>
+      </td>
+      <td>${r.cantInvitados || '—'}</td>
+      <td>
+        <div class="guest-list">
+          ${r.invitados.map(inv => `
+            <div class="guest-item">
+              ${inv.nombre} ${inv.apellido}
+              <span class="badge ${inv.genero === 'Masculino' ? 'badge-m' : 'badge-f'}">
+                ${inv.genero === 'Masculino' ? 'M' : 'F'}
+              </span>
+            </div>`).join('') || '<span style="color:var(--gray-500);font-size:11px;">—</span>'}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+// ── FILTRO / BÚSQUEDA ─────────────────────────────────
+function filtrar() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  if (!q) {
+    registrosFiltrados = [...todosLosRegistros];
+  } else {
+    registrosFiltrados = todosLosRegistros.filter(r =>
+      `${r.nombre} ${r.apellido} ${r.numSocio} ${r.numMesa}`.toLowerCase().includes(q)
+    );
+  }
+  actualizarStats();
+  renderTabla();
+}
+
+// ── EXPORTAR EXCEL ────────────────────────────────────
+function exportarExcel() {
+  if (!todosLosRegistros.length) { alert('No hay registros para exportar.'); return; }
+
+  const wb = XLSX.utils.book_new();
+
+  // Hoja 1: Socios
+  const h1 = [['#','Fecha y Hora','Nombre','Apellido','N° Socio','N° Mesa','¿Lleva Invitados?','Cant. Invitados']];
+  todosLosRegistros.forEach((r,i) => h1.push([
+    i+1, r.fechaHora, r.nombre, r.apellido,
+    r.numSocio, r.numMesa, r.tieneInvitados, r.cantInvitados || 0
+  ]));
+  const ws1 = XLSX.utils.aoa_to_sheet(h1);
+  ws1['!cols'] = [{wch:5},{wch:20},{wch:18},{wch:18},{wch:14},{wch:10},{wch:18},{wch:16}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'Socios');
+
+  // Hoja 2: Invitados
+  const h2 = [['#','Fecha y Hora','Nombre Socio','N° Socio','Mesa','# Invitado','Nombre','Apellido','Género']];
+  let n = 1;
+  todosLosRegistros.forEach(r => {
+    r.invitados.forEach((inv,j) => {
+      h2.push([n++, r.fechaHora, `${r.nombre} ${r.apellido}`, r.numSocio, r.numMesa, j+1, inv.nombre, inv.apellido, inv.genero]);
+    });
+  });
+  if (h2.length === 1) h2.push(['—','—','Sin invitados registrados','—','—','—','—','—','—']);
+  const ws2 = XLSX.utils.aoa_to_sheet(h2);
+  ws2['!cols'] = [{wch:5},{wch:20},{wch:22},{wch:14},{wch:8},{wch:10},{wch:18},{wch:18},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Invitados');
+
+  // Hoja 3: Resumen
+  const conInv = todosLosRegistros.filter(r => r.tieneInvitados === 'Sí').length;
+  const totInv = todosLosRegistros.reduce((s,r) => s + (r.cantInvitados||0), 0);
+  const ws3 = XLSX.utils.aoa_to_sheet([
+    ['Reporte – Los Miserables', ''],
+    ['Generado', new Date().toLocaleString('es-PA')],
+    ['',''],
+    ['Total Socios Registrados', todosLosRegistros.length],
+    ['Socios con Invitados', conInv],
+    ['Total Invitados', totInv],
+    ['Total Asistentes', todosLosRegistros.length + totInv],
+  ]);
+  ws3['!cols'] = [{wch:28},{wch:20}];
+  XLSX.utils.book_append_sheet(wb, ws3, 'Resumen');
+
+  const fecha = new Date().toLocaleDateString('es-PA').replace(/\//g,'-');
+  XLSX.writeFile(wb, `Admin_LosMiserables_${fecha}.xlsx`);
+}
+</script>
+</body>
+</html>
