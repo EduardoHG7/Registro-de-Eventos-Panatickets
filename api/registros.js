@@ -1,3 +1,7 @@
+export const config = {
+  api: { bodyParser: true },
+};
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -13,26 +17,29 @@ export default async function handler(req, res) {
   }
 
   try {
-    const options = { method: req.method };
-    if (req.method === 'POST') {
-      options.headers = { 'Content-Type': 'application/json' };
-      options.body = JSON.stringify(req.body);
-    }
+    const isPost = req.method === 'POST';
+    const bodyStr = isPost ? JSON.stringify(req.body ?? {}) : undefined;
 
-    const upstream = await fetch(url, options);
+    const upstream = await fetch(url, {
+      method: isPost ? 'POST' : 'GET',
+      headers: isPost ? { 'Content-Type': 'application/json' } : undefined,
+      body: bodyStr,
+    });
+
     const text = await upstream.text();
 
     try {
       const data = JSON.parse(text);
-      res.status(200).json(data);
+      return res.status(200).json(data);
     } catch (_) {
-      res.status(500).json({
+      return res.status(500).json({
         error: 'Apps Script no devolvió JSON',
         httpStatus: upstream.status,
-        preview: text.slice(0, 600)
+        method: req.method,
+        preview: text.slice(0, 800),
       });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 }
