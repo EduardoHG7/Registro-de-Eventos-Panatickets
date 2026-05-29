@@ -17,6 +17,7 @@
     --gray-700: #4A4744;
     --black: #1A1917;
     --gold: #C4A35A;
+    --gold-dark: #9E7E3A;
     --green: #2F9E44;
   }
 
@@ -30,7 +31,7 @@
     padding: 0 0 80px;
   }
 
-  /* Hero band */
+  /* Hero */
   .hero {
     background: var(--black);
     padding: 44px 20px 56px;
@@ -38,235 +39,87 @@
     position: relative;
     overflow: hidden;
   }
-
   .hero::before {
     content: '';
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse 60% 80% at 50% 120%, rgba(212,43,43,0.18) 0%, transparent 70%);
   }
-
   .hero-inner { position: relative; z-index: 1; }
-
   .logo-img {
     display: block;
     height: 62px;
     margin: 0 auto 28px;
     filter: drop-shadow(0 2px 14px rgba(212,43,43,0.5));
   }
-
   .pill {
     display: inline-block;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 3.5px;
-    text-transform: uppercase;
-    color: var(--gold);
+    font-size: 10px; font-weight: 500; letter-spacing: 3.5px;
+    text-transform: uppercase; color: var(--gold);
     border: 1px solid rgba(196,163,90,0.35);
-    padding: 5px 16px;
-    border-radius: 20px;
-    margin-bottom: 16px;
+    padding: 5px 16px; border-radius: 20px; margin-bottom: 16px;
   }
-
   .hero-title {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(40px, 9vw, 64px);
-    font-weight: 600;
-    color: var(--white);
-    line-height: 1.0;
-    margin-bottom: 10px;
+    font-size: clamp(40px, 9vw, 64px); font-weight: 600;
+    color: var(--white); line-height: 1.0; margin-bottom: 10px;
   }
-
   .hero-title em { font-style: italic; color: var(--gold); }
-
   .hero-sub {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 16px;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 0;
+    font-style: italic; font-size: 16px;
+    color: rgba(255,255,255,0.45); margin-bottom: 0;
   }
 
-  /* Wrapper */
-  .wrapper {
-    max-width: 640px;
-    margin: -24px auto 0;
-    padding: 0 20px;
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Card */
+  /* Wrapper & Card */
+  .wrapper { max-width: 640px; margin: -24px auto 0; padding: 0 20px; position: relative; z-index: 2; }
   .card {
-    background: var(--white);
-    border-radius: 3px;
+    background: var(--white); border-radius: 3px;
     padding: 44px 44px 40px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 12px 48px rgba(0,0,0,0.10);
     animation: fadeUp 0.5s 0.1s ease both;
   }
-
   @media (max-width: 520px) { .card { padding: 28px 22px 28px; } }
 
   .card-intro {
-    font-size: 13.5px;
-    font-weight: 300;
-    color: var(--gray-500);
-    line-height: 1.7;
-    margin-bottom: 32px;
-    padding-bottom: 24px;
+    font-size: 13.5px; font-weight: 300; color: var(--gray-500);
+    line-height: 1.7; margin-bottom: 32px; padding-bottom: 24px;
     border-bottom: 1px solid var(--gray-100);
   }
 
   /* Section label */
   .sec-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--red);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-size: 10px; font-weight: 500; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
   }
   .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--gray-100); }
+  .sec-label.gold { color: var(--gold); }
 
   /* Fields */
   .field-group { margin-bottom: 20px; }
-
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 460px) { .field-row { grid-template-columns: 1fr; } }
 
   label {
-    display: block;
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    color: var(--gray-700);
-    margin-bottom: 7px;
+    display: block; font-size: 10.5px; font-weight: 500;
+    letter-spacing: 1.8px; text-transform: uppercase;
+    color: var(--gray-700); margin-bottom: 7px;
   }
 
   input[type="text"], select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 2px;
-    font-family: 'Jost', sans-serif;
-    font-size: 14px;
-    color: var(--black);
-    background: var(--white);
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--gray-300); border-radius: 2px;
+    font-family: 'Jost', sans-serif; font-size: 14px;
+    color: var(--black); background: var(--white);
     transition: border-color 0.18s, box-shadow 0.18s;
-    outline: none;
-    -webkit-appearance: none;
+    outline: none; -webkit-appearance: none;
   }
-
   input[type="text"]:focus, select:focus {
     border-color: var(--red);
     box-shadow: 0 0 0 3px rgba(212,43,43,0.08);
   }
-
   input::placeholder { color: var(--gray-300); font-weight: 300; }
-
-  /* Radio buttons */
-  .radio-group { display: flex; gap: 10px; }
-
-  .radio-option { flex: 1; }
-  .radio-option input[type="radio"] { display: none; }
-  .radio-option label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 11px;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 2px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--gray-500);
-    transition: all 0.16s;
-  }
-  .radio-option input[type="radio"]:checked + label {
-    border-color: var(--red);
-    background: var(--red);
-    color: var(--white);
-  }
-  .radio-option label:hover { border-color: var(--red); color: var(--red); }
-  .radio-option input[type="radio"]:checked + label:hover { color: white; }
-
-  /* Counter */
-  .count-wrap {
-    display: flex;
-    align-items: center;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 2px;
-    overflow: hidden;
-    background: white;
-    max-width: 150px;
-  }
-  .count-btn {
-    width: 44px; height: 46px;
-    border: none; background: none;
-    font-size: 22px; color: var(--gray-500);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s, color 0.15s;
-    flex-shrink: 0;
-  }
-  .count-btn:hover { background: var(--red); color: white; }
-  .count-display {
-    flex: 1; text-align: center;
-    font-size: 20px; font-weight: 300;
-    border-left: 1.5px solid var(--gray-300);
-    border-right: 1.5px solid var(--gray-300);
-    line-height: 46px;
-    user-select: none;
-  }
-
-  /* Guest section */
-  #guests-section {
-    background: var(--gray-100);
-    border-left: 3px solid var(--red);
-    padding: 26px 26px 18px;
-    margin-top: 24px;
-    animation: fadeUp 0.3s ease both;
-  }
-  @media (max-width: 480px) { #guests-section { padding: 18px 14px 14px; } }
-
-  .guest-block {
-    border-bottom: 1px dashed var(--gray-300);
-    padding-bottom: 18px;
-    margin-bottom: 18px;
-    animation: fadeUp 0.25s ease both;
-  }
-  .guest-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-  .guest-num-label {
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 2px; color: var(--red);
-    text-transform: uppercase; margin-bottom: 12px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .guest-num-label span {
-    width: 22px; height: 22px; border-radius: 50%;
-    background: var(--red); color: white;
-    font-size: 11px; font-weight: 500;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-family: 'Jost', sans-serif;
-  }
-
-  .guest-fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr 120px;
-    gap: 12px;
-  }
-  @media (max-width: 480px) { .guest-fields { grid-template-columns: 1fr; } }
 
   .select-wrap { position: relative; }
   .select-wrap::after {
@@ -276,82 +129,121 @@
   }
   .select-wrap select { padding-right: 32px; }
 
+  /* Radio buttons */
+  .radio-group { display: flex; gap: 10px; }
+  .radio-option { flex: 1; }
+  .radio-option input[type="radio"] { display: none; }
+  .radio-option label {
+    display: flex; align-items: center; justify-content: center;
+    padding: 11px; border: 1.5px solid var(--gray-300); border-radius: 2px;
+    cursor: pointer; font-size: 13px; font-weight: 400;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--gray-500); transition: all 0.16s;
+  }
+  .radio-option input[type="radio"]:checked + label {
+    border-color: var(--red); background: var(--red); color: var(--white);
+  }
+  .radio-option label:hover { border-color: var(--red); color: var(--red); }
+  .radio-option input[type="radio"]:checked + label:hover { color: white; }
+
+  /* Counter */
+  .count-wrap {
+    display: flex; align-items: center;
+    border: 1.5px solid var(--gray-300); border-radius: 2px;
+    overflow: hidden; background: white; max-width: 150px;
+  }
+  .count-btn {
+    width: 44px; height: 46px; border: none; background: none;
+    font-size: 22px; color: var(--gray-500); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, color 0.15s; flex-shrink: 0;
+  }
+  .count-btn:hover { background: var(--red); color: white; }
+  .count-display {
+    flex: 1; text-align: center; font-size: 20px; font-weight: 300;
+    border-left: 1.5px solid var(--gray-300);
+    border-right: 1.5px solid var(--gray-300);
+    line-height: 46px; user-select: none;
+  }
+
+  /* Guest sections */
+  .guests-section {
+    border-left: 3px solid var(--red);
+    background: var(--gray-100);
+    padding: 26px 26px 18px; margin-top: 24px;
+    animation: fadeUp 0.3s ease both;
+  }
+  .guests-section.gold-border { border-left-color: var(--gold); }
+  @media (max-width: 480px) { .guests-section { padding: 18px 14px 14px; } }
+
+  .guest-block {
+    border-bottom: 1px dashed var(--gray-300);
+    padding-bottom: 18px; margin-bottom: 18px;
+    animation: fadeUp 0.25s ease both;
+  }
+  .guest-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .guest-num-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 2px;
+    color: var(--red); text-transform: uppercase; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .guest-num-label.gold { color: var(--gold); }
+  .guest-num-label span {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--red); color: white;
+    font-size: 11px; font-weight: 500;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: 'Jost', sans-serif;
+  }
+  .guest-num-label.gold span { background: var(--gold); }
+
+  .guest-fields { display: grid; grid-template-columns: 1fr 1fr 120px; gap: 12px; }
+  @media (max-width: 480px) { .guest-fields { grid-template-columns: 1fr; } }
+
   /* Divider */
   .divider { height: 1px; background: var(--gray-100); margin: 28px 0; }
 
   /* Submit */
   .submit-area { text-align: center; padding-top: 6px; }
-
   .btn-submit {
     display: inline-flex; align-items: center; gap: 10px;
     background: var(--red); color: white; border: none;
-    padding: 15px 48px;
-    font-family: 'Jost', sans-serif;
+    padding: 15px 48px; font-family: 'Jost', sans-serif;
     font-size: 12px; font-weight: 500; letter-spacing: 3px;
     text-transform: uppercase; cursor: pointer; border-radius: 2px;
     transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
     box-shadow: 0 4px 20px rgba(212,43,43,0.3);
-    width: 100%;
-    justify-content: center;
+    width: 100%; justify-content: center;
   }
   .btn-submit:hover { background: var(--red-dark); transform: translateY(-1px); box-shadow: 0 6px 28px rgba(212,43,43,0.4); }
   .btn-submit:active { transform: translateY(0); }
   .btn-submit:disabled { background: var(--gray-300); box-shadow: none; cursor: not-allowed; transform: none; }
 
-  /* Loading spinner */
   .spinner {
     width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    display: none;
+    border: 2px solid rgba(255,255,255,0.3); border-top-color: white;
+    border-radius: 50%; animation: spin 0.7s linear infinite; display: none;
   }
 
-  /* Success screen */
-  #success-screen {
-    display: none;
-    text-align: center;
-    padding: 60px 20px;
-    animation: fadeUp 0.5s ease both;
-  }
-
+  /* Success */
+  #success-screen { display: none; text-align: center; padding: 60px 20px; animation: fadeUp 0.5s ease both; }
   .success-icon {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    background: #F0FFF4;
-    border: 2px solid #82C99A;
+    width: 72px; height: 72px; border-radius: 50%;
+    background: #F0FFF4; border: 2px solid #82C99A;
     display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 24px;
-    font-size: 30px;
+    margin: 0 auto 24px; font-size: 30px;
   }
+  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; color: var(--black); margin-bottom: 10px; }
+  .success-sub { font-size: 14px; font-weight: 300; color: var(--gray-500); line-height: 1.6; }
 
-  .success-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px; font-weight: 600;
-    color: var(--black); margin-bottom: 10px;
-  }
-
-  .success-sub {
-    font-size: 14px; font-weight: 300;
-    color: var(--gray-500); line-height: 1.6;
-  }
-
-  /* Error */
+  /* Errors */
   input.err, select.err { border-color: var(--red) !important; background: #fff8f8 !important; }
   .err-msg { font-size: 11px; color: var(--red); margin-top: 5px; }
-
-  /* Error banner */
   #error-banner {
-    display: none;
-    background: #FFF5F5;
-    border: 1.5px solid #FCA5A5;
-    border-radius: 2px;
-    padding: 14px 18px;
-    margin-bottom: 20px;
-    font-size: 13px;
-    color: #B91C1C;
-    font-weight: 400;
+    display: none; background: #FFF5F5; border: 1.5px solid #FCA5A5;
+    border-radius: 2px; padding: 14px 18px; margin-bottom: 20px;
+    font-size: 13px; color: #B91C1C; font-weight: 400;
   }
 
   .hidden { display: none !important; }
@@ -359,21 +251,14 @@
   @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Footer */
-  .footer {
-    text-align: center; margin-top: 32px;
-    font-size: 10.5px; color: var(--gray-500); letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
+  .footer { text-align: center; margin-top: 32px; font-size: 10.5px; color: var(--gray-500); letter-spacing: 1.5px; text-transform: uppercase; }
 </style>
 </head>
 <body>
 
-<!-- Hero -->
 <div class="hero">
   <div class="hero-inner">
-    <img src="LOGO_PANATICKETS_ai_3-01.png" class="logo-img" alt="Panatickets"
-         onerror="this.style.display='none'">
+    <img src="LOGO_PANATICKETS_ai_3-01.png" class="logo-img" alt="Panatickets" onerror="this.style.display='none'">
     <div class="pill">Formulario de Registro</div>
     <h1 class="hero-title"><em>Los Miserables</em></h1>
     <p class="hero-sub">Por favor llena los datos para realizar tu registro</p>
@@ -383,7 +268,6 @@
 <div class="wrapper">
   <div class="card">
 
-    <!-- Form -->
     <div id="form-view">
       <p class="card-intro">
         Completa los campos a continuación con tu información y la de tus invitados.
@@ -394,6 +278,7 @@
 
       <form id="regForm" novalidate>
 
+        <!-- ── DATOS DEL SOCIO ── -->
         <div class="sec-label">Datos del Socio</div>
 
         <div class="field-row field-group">
@@ -413,31 +298,81 @@
             <input type="text" id="numSocio" placeholder="Ej. PT-00123">
           </div>
           <div>
-            <label for="numMesa">Número de Mesa</label>
-            <input type="text" id="numMesa" placeholder="Ej. 12">
+            <label for="zona">Zona</label>
+            <div class="select-wrap">
+              <select id="zona" onchange="actualizarMesas()">
+                <option value="">— Selecciona zona —</option>
+                <option value="VIP">VIP</option>
+                <option value="PLATINUM">PLATINUM</option>
+                <option value="GOLD">GOLD</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="numMesa">Mesa</label>
+          <div class="select-wrap">
+            <select id="numMesa">
+              <option value="">— Selecciona zona primero —</option>
+            </select>
           </div>
         </div>
 
         <div class="divider"></div>
 
-        <div class="sec-label">Invitados</div>
+        <!-- ── SOCIOS INVITADOS ── -->
+        <div class="sec-label gold">Socios Invitados</div>
 
         <div class="field-group">
-          <label>¿Llevas invitados?</label>
+          <label>¿Lleva socios invitados?</label>
           <div class="radio-group">
             <div class="radio-option">
-              <input type="radio" id="invSi" name="tieneInvitados" value="si">
+              <input type="radio" id="siSi" name="tieneSociosInv" value="si">
+              <label for="siSi">Sí</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" id="siNo" name="tieneSociosInv" value="no" checked>
+              <label for="siNo">No</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="siCantidadSection" class="field-group hidden">
+          <label>¿Cuántos socios invitados lleva?</label>
+          <div class="count-wrap">
+            <button type="button" class="count-btn" id="siBtnMinus">−</button>
+            <div class="count-display" id="siCountDisplay">1</div>
+            <button type="button" class="count-btn" id="siBtnPlus">+</button>
+          </div>
+        </div>
+
+        <div id="si-guests-section" class="guests-section gold-border hidden">
+          <div class="sec-label gold" style="margin-bottom:20px;">Datos de Socios Invitados</div>
+          <div id="siGuestFields"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ── INVITADOS NO SOCIOS ── -->
+        <div class="sec-label">Invitados No Socios</div>
+
+        <div class="field-group">
+          <label>¿Lleva invitados no socios?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" id="invSi" name="tieneInvNoSocios" value="si">
               <label for="invSi">Sí</label>
             </div>
             <div class="radio-option">
-              <input type="radio" id="invNo" name="tieneInvitados" value="no" checked>
+              <input type="radio" id="invNo" name="tieneInvNoSocios" value="no" checked>
               <label for="invNo">No</label>
             </div>
           </div>
         </div>
 
         <div id="cantidadSection" class="field-group hidden">
-          <label>¿Cuántos invitados van contigo?</label>
+          <label>¿Cuántos invitados no socios lleva?</label>
           <div class="count-wrap">
             <button type="button" class="count-btn" id="btnMinus">−</button>
             <div class="count-display" id="countDisplay">1</div>
@@ -445,8 +380,8 @@
           </div>
         </div>
 
-        <div id="guests-section" class="hidden">
-          <div class="sec-label" style="margin-bottom:20px;">Datos de Invitados</div>
+        <div id="guests-section" class="guests-section hidden">
+          <div class="sec-label" style="margin-bottom:20px;">Datos de Invitados No Socios</div>
           <div id="guestFields"></div>
         </div>
 
@@ -462,7 +397,6 @@
       </form>
     </div>
 
-    <!-- Success -->
     <div id="success-screen">
       <div class="success-icon">✓</div>
       <h2 class="success-title">¡Registro Confirmado!</h2>
@@ -476,23 +410,101 @@
 <script>
 const APPS_SCRIPT_URL = '/api/registros';
 
+const ZONAS = {
+  'VIP':      ['A1','A2','A3','A4','A5','A6',
+               'B1','B2','B3','B4','B5','B6','B7','B8',
+               'C1','C2','C3','C4','C5','C6','C7','C8','C9','C10','C11','C12','C13','C14','C15','C16',
+               'D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12','D13','D14','D15','D16',
+               'E1','E2','E3','E4','E5','E6','E7','E8','E9','E10','E11','E12','E13','E14','E15','E16'],
+  'PLATINUM': ['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12',
+               'G1','G2','G3','G4','G5','G6','G7','G8','G9','G10','G11','G12',
+               'H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12',
+               'J1','J2','J3','J4','J5','J6','J7','J8','J9','J10','J11','J12'],
+  'GOLD':     ['K1','K2','K3','K4','K5','K6','K7','K8','K9','K10','K11','K12']
+};
+
+// ── ZONA → MESA ────────────────────────────────────────
+function actualizarMesas() {
+  const zona = document.getElementById('zona').value;
+  const mesaSelect = document.getElementById('numMesa');
+  mesaSelect.innerHTML = '';
+  if (!zona) {
+    mesaSelect.innerHTML = '<option value="">— Selecciona zona primero —</option>';
+    return;
+  }
+  mesaSelect.innerHTML = '<option value="">— Selecciona mesa —</option>';
+  ZONAS[zona].forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m; opt.textContent = m;
+    mesaSelect.appendChild(opt);
+  });
+}
+
+// ── SOCIOS INVITADOS ───────────────────────────────────
+let socioInvCount = 1;
+
+document.getElementById('siBtnMinus').addEventListener('click', () => {
+  if (socioInvCount > 1) { socioInvCount--; syncSI(); }
+});
+document.getElementById('siBtnPlus').addEventListener('click', () => {
+  if (socioInvCount < 20) { socioInvCount++; syncSI(); }
+});
+
+function syncSI() {
+  document.getElementById('siCountDisplay').textContent = socioInvCount;
+  renderSociosInv();
+}
+
+document.querySelectorAll('input[name="tieneSociosInv"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const si = document.getElementById('siSi').checked;
+    document.getElementById('siCantidadSection').classList.toggle('hidden', !si);
+    document.getElementById('si-guests-section').classList.toggle('hidden', !si);
+    if (si) renderSociosInv();
+  });
+});
+
+function renderSociosInv() {
+  const c = document.getElementById('siGuestFields');
+  c.innerHTML = '';
+  for (let i = 1; i <= socioInvCount; i++) {
+    const b = document.createElement('div');
+    b.className = 'guest-block';
+    b.innerHTML = `
+      <div class="guest-num-label gold"><span>${i}</span> Socio Invitado ${i}</div>
+      <div class="guest-fields">
+        <div><label>Nombre</label><input type="text" id="siN${i}" placeholder="Nombre"></div>
+        <div><label>Apellido</label><input type="text" id="siA${i}" placeholder="Apellido"></div>
+        <div><label>Género</label>
+          <div class="select-wrap">
+            <select id="siG${i}">
+              <option value="">—</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+            </select>
+          </div>
+        </div>
+      </div>`;
+    c.appendChild(b);
+  }
+}
+
+// ── INVITADOS NO SOCIOS ───────────────────────────────
 let guestCount = 1;
 
-// Counter
 document.getElementById('btnMinus').addEventListener('click', () => {
-  if (guestCount > 1) { guestCount--; sync(); }
+  if (guestCount > 1) { guestCount--; syncGuests(); }
 });
 document.getElementById('btnPlus').addEventListener('click', () => {
-  if (guestCount < 20) { guestCount++; sync(); }
+  if (guestCount < 20) { guestCount++; syncGuests(); }
 });
 
-function sync() {
+function syncGuests() {
   document.getElementById('countDisplay').textContent = guestCount;
   renderGuests();
 }
 
-// Toggle invitados
-document.querySelectorAll('input[name="tieneInvitados"]').forEach(r => {
+document.querySelectorAll('input[name="tieneInvNoSocios"]').forEach(r => {
   r.addEventListener('change', () => {
     const si = document.getElementById('invSi').checked;
     document.getElementById('cantidadSection').classList.toggle('hidden', !si);
@@ -508,18 +520,11 @@ function renderGuests() {
     const b = document.createElement('div');
     b.className = 'guest-block';
     b.innerHTML = `
-      <div class="guest-num-label"><span>${i}</span> Invitado ${i}</div>
+      <div class="guest-num-label"><span>${i}</span> Invitado No Socio ${i}</div>
       <div class="guest-fields">
-        <div>
-          <label>Nombre</label>
-          <input type="text" id="gN${i}" placeholder="Nombre">
-        </div>
-        <div>
-          <label>Apellido</label>
-          <input type="text" id="gA${i}" placeholder="Apellido">
-        </div>
-        <div>
-          <label>Género</label>
+        <div><label>Nombre</label><input type="text" id="gN${i}" placeholder="Nombre"></div>
+        <div><label>Apellido</label><input type="text" id="gA${i}" placeholder="Apellido"></div>
+        <div><label>Género</label>
           <div class="select-wrap">
             <select id="gG${i}">
               <option value="">—</option>
@@ -533,16 +538,32 @@ function renderGuests() {
   }
 }
 
-// Validation
+// ── VALIDACIÓN ────────────────────────────────────────
 function validar() {
   let ok = true;
   document.querySelectorAll('.err').forEach(e => e.classList.remove('err'));
   document.querySelectorAll('.err-msg').forEach(e => e.remove());
 
-  ['nombre','apellido','numSocio','numMesa'].forEach(id => {
+  ['nombre','apellido','numSocio'].forEach(id => {
     const el = document.getElementById(id);
     if (!el.value.trim()) { markErr(el, 'Campo obligatorio'); ok = false; }
   });
+
+  const zona = document.getElementById('zona');
+  const mesa = document.getElementById('numMesa');
+  if (!zona.value) { markErr(zona, 'Selecciona una zona'); ok = false; }
+  if (!mesa.value) { markErr(mesa, 'Selecciona una mesa'); ok = false; }
+
+  if (document.getElementById('siSi').checked) {
+    for (let i = 1; i <= socioInvCount; i++) {
+      const n = document.getElementById(`siN${i}`);
+      const a = document.getElementById(`siA${i}`);
+      const g = document.getElementById(`siG${i}`);
+      if (!n.value.trim()) { markErr(n, 'Obligatorio'); ok = false; }
+      if (!a.value.trim()) { markErr(a, 'Obligatorio'); ok = false; }
+      if (!g.value) { markErr(g, 'Selecciona'); ok = false; }
+    }
+  }
 
   if (document.getElementById('invSi').checked) {
     for (let i = 1; i <= guestCount; i++) {
@@ -564,16 +585,29 @@ function markErr(el, msg) {
   el.parentNode.appendChild(s);
 }
 
-// Submit
+// ── SUBMIT ────────────────────────────────────────────
 document.getElementById('regForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   if (!validar()) return;
 
+  const tieneSI = document.getElementById('siSi').checked;
   const tieneInv = document.getElementById('invSi').checked;
-  const invitados = [];
+
+  const sociosInvitados = [];
+  if (tieneSI) {
+    for (let i = 1; i <= socioInvCount; i++) {
+      sociosInvitados.push({
+        nombre: document.getElementById(`siN${i}`).value.trim(),
+        apellido: document.getElementById(`siA${i}`).value.trim(),
+        genero: document.getElementById(`siG${i}`).value
+      });
+    }
+  }
+
+  const invitadosNoSocios = [];
   if (tieneInv) {
     for (let i = 1; i <= guestCount; i++) {
-      invitados.push({
+      invitadosNoSocios.push({
         nombre: document.getElementById(`gN${i}`).value.trim(),
         apellido: document.getElementById(`gA${i}`).value.trim(),
         genero: document.getElementById(`gG${i}`).value
@@ -586,20 +620,22 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
     nombre: document.getElementById('nombre').value.trim(),
     apellido: document.getElementById('apellido').value.trim(),
     numSocio: document.getElementById('numSocio').value.trim(),
-    numMesa: document.getElementById('numMesa').value.trim(),
-    tieneInvitados: tieneInv ? 'Sí' : 'No',
-    cantInvitados: tieneInv ? guestCount : 0,
-    invitados
+    zona: document.getElementById('zona').value,
+    numMesa: document.getElementById('numMesa').value,
+    tieneSociosInv: tieneSI ? 'Sí' : 'No',
+    cantSociosInv: tieneSI ? socioInvCount : 0,
+    sociosInvitados,
+    tieneInvNoSocios: tieneInv ? 'Sí' : 'No',
+    cantInvNoSocios: tieneInv ? guestCount : 0,
+    invitadosNoSocios
   };
 
-  // Loading state
   const btn = document.getElementById('btnSubmit');
   const txt = document.getElementById('btnText');
   const spin = document.getElementById('spinner');
   btn.disabled = true;
   spin.style.display = 'block';
   txt.textContent = 'Enviando...';
-
   document.getElementById('error-banner').style.display = 'none';
 
   try {
@@ -608,12 +644,9 @@ document.getElementById('regForm').addEventListener('submit', async function(e) 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-
     if (!res.ok) throw new Error('Error del servidor');
-
     document.getElementById('form-view').style.display = 'none';
     document.getElementById('success-screen').style.display = 'block';
-
   } catch (err) {
     const eb = document.getElementById('error-banner');
     eb.style.display = 'block';
