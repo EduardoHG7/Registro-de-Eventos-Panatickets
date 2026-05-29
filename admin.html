@@ -843,9 +843,10 @@ async function cargarDatos() {
     }
     const rawRows = await res.json();
 
-    // Columnas (14): [0]Fecha [1]Nombre [2]Apellido/Tipo [3]N°Socio [4]Zona [5]Mesa
+    // Columnas (16): [0]Fecha [1]Nombre [2]Apellido/Tipo [3]N°Socio [4]Zona [5]Mesa
     //                [6]tieneSociosInv [7]cantSociosInv [8]tieneInvNoSoc [9]cantInvNoSoc
-    //                [10]NombreInv [11]ApellidoInv [12]Género [13]Tipo
+    //                [10]Nombre SI [11]Apellido SI [12]Género SI
+    //                [13]Nombre INS [14]Apellido INS [15]Género INS
     todosLosRegistros = [];
     let currentSocio = null;
 
@@ -865,9 +866,9 @@ async function cargarDatos() {
       } else if (tipo === '(inv-no-socio)') {
         if (currentSocio) {
           currentSocio.invitadosNoSocios.push({
-            nombre: row[10] || '',
-            apellido: row[11] || '',
-            genero: row[12] || ''
+            nombre: row[13] || '',
+            apellido: row[14] || '',
+            genero: row[15] || ''
           });
         }
       } else {
