@@ -680,12 +680,12 @@ function doGet(e) {
         <div class="stat-val red" id="statSocios">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Con Invitados</div>
-        <div class="stat-val gold" id="statConInv">—</div>
+        <div class="stat-label">Socios Invitados</div>
+        <div class="stat-val gold" id="statSociosInv">—</div>
       </div>
       <div class="stat-card">
-        <div class="stat-label">Total Invitados</div>
-        <div class="stat-val green" id="statTotInv">—</div>
+        <div class="stat-label">Inv. No Socios</div>
+        <div class="stat-val green" id="statInvNoSocios">—</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Asistentes Totales</div>
@@ -735,15 +735,17 @@ function doGet(e) {
               <th>Fecha / Hora</th>
               <th>Nombre del Socio</th>
               <th>N° Socio</th>
+              <th>Zona</th>
               <th>Mesa</th>
-              <th>Invitados</th>
-              <th>Cant.</th>
-              <th>Detalle Invitados</th>
+              <th>Socios Inv.</th>
+              <th>Detalle Socios Inv.</th>
+              <th>Inv. No Socios</th>
+              <th>Detalle Inv. No Socios</th>
             </tr>
           </thead>
           <tbody id="tableBody">
             <tr class="loading-row">
-              <td colspan="8">Cargando registros...</td>
+              <td colspan="10">Cargando registros...</td>
             </tr>
           </tbody>
         </table>
@@ -831,7 +833,7 @@ if (localStorage.getItem('pt_script_url')) {
 // ── CARGAR DATOS ──────────────────────────────────────
 async function cargarDatos() {
   document.getElementById('tableBody').innerHTML =
-    '<tr class="loading-row"><td colspan="8">Cargando registros...</td></tr>';
+    '<tr class="loading-row"><td colspan="10">Cargando registros...</td></tr>';
 
   try {
     const res = await fetch('/api/registros');
@@ -841,7 +843,9 @@ async function cargarDatos() {
     }
     const rawRows = await res.json();
 
-    // Formato: [fecha, nombre, apellido/tipo, numSocio, numMesa, tieneInv, cantInv, nombreInv, apellidoInv, genero]
+    // Columnas (14): [0]Fecha [1]Nombre [2]Apellido/Tipo [3]N°Socio [4]Zona [5]Mesa
+    //                [6]tieneSociosInv [7]cantSociosInv [8]tieneInvNoSoc [9]cantInvNoSoc
+    //                [10]NombreInv [11]ApellidoInv [12]Género [13]Tipo
     todosLosRegistros = [];
     let currentSocio = null;
 
@@ -850,12 +854,20 @@ async function cargarDatos() {
       if (!row[0]) return;
 
       const tipo = row[2];
-      if (tipo === '(invitado)') {
+      if (tipo === '(socio-inv)') {
         if (currentSocio) {
-          currentSocio.invitados.push({
-            nombre: row[7] || '',
-            apellido: row[8] || '',
-            genero: row[9] || ''
+          currentSocio.sociosInvitados.push({
+            nombre: row[10] || '',
+            apellido: row[11] || '',
+            genero: row[12] || ''
+          });
+        }
+      } else if (tipo === '(inv-no-socio)') {
+        if (currentSocio) {
+          currentSocio.invitadosNoSocios.push({
+            nombre: row[10] || '',
+            apellido: row[11] || '',
+            genero: row[12] || ''
           });
         }
       } else {
@@ -864,10 +876,14 @@ async function cargarDatos() {
           nombre: row[1] || '',
           apellido: row[2] || '',
           numSocio: row[3] || '',
-          numMesa: row[4] || '',
-          tieneInvitados: row[5] || 'No',
-          cantInvitados: parseInt(row[6]) || 0,
-          invitados: []
+          zona: row[4] || '',
+          numMesa: row[5] || '',
+          tieneSociosInv: row[6] || 'No',
+          cantSociosInv: parseInt(row[7]) || 0,
+          tieneInvNoSocios: row[8] || 'No',
+          cantInvNoSocios: parseInt(row[9]) || 0,
+          sociosInvitados: [],
+          invitadosNoSocios: []
         };
         todosLosRegistros.push(currentSocio);
       }
@@ -879,41 +895,52 @@ async function cargarDatos() {
 
   } catch (err) {
     document.getElementById('tableBody').innerHTML =
-      `<tr class="loading-row"><td colspan="8">Error al cargar datos: ${err.message}. Verifica la URL del script y los permisos.</td></tr>`;
+      `<tr class="loading-row"><td colspan="10">Error al cargar datos: ${err.message}. Verifica la URL del script y los permisos.</td></tr>`;
   }
 }
 
 // ── STATS ─────────────────────────────────────────────
 function actualizarStats() {
   const socios = registrosFiltrados.length;
-  const conInv = registrosFiltrados.filter(r => r.tieneInvitados === 'Sí').length;
-  const totInv = registrosFiltrados.reduce((s, r) => s + (r.cantInvitados || 0), 0);
+  const totSociosInv = registrosFiltrados.reduce((s, r) => s + (r.cantSociosInv || 0), 0);
+  const totInvNoSocios = registrosFiltrados.reduce((s, r) => s + (r.cantInvNoSocios || 0), 0);
 
   let hombres = 0, mujeres = 0;
   registrosFiltrados.forEach(r => {
-    r.invitados.forEach(inv => {
+    [...r.sociosInvitados, ...r.invitadosNoSocios].forEach(inv => {
       if (inv.genero === 'Masculino') hombres++;
       else if (inv.genero === 'Femenino') mujeres++;
     });
   });
 
   document.getElementById('statSocios').textContent = socios;
-  document.getElementById('statConInv').textContent = conInv;
-  document.getElementById('statTotInv').textContent = totInv;
-  document.getElementById('statTotal').textContent = socios + totInv;
+  document.getElementById('statSociosInv').textContent = totSociosInv;
+  document.getElementById('statInvNoSocios').textContent = totInvNoSocios;
+  document.getElementById('statTotal').textContent = socios + totSociosInv + totInvNoSocios;
   document.getElementById('statHombres').textContent = hombres;
   document.getElementById('statMujeres').textContent = mujeres;
   document.getElementById('countBadge').textContent = `${socios} registro${socios !== 1 ? 's' : ''}`;
 }
 
 // ── RENDER TABLA ──────────────────────────────────────
+function guestListHTML(lista) {
+  if (!lista.length) return '<span style="color:var(--gray-500);font-size:11px;">—</span>';
+  return `<div class="guest-list">${lista.map(inv => `
+    <div class="guest-item">
+      ${inv.nombre} ${inv.apellido}
+      <span class="badge ${inv.genero === 'Masculino' ? 'badge-m' : 'badge-f'}">
+        ${inv.genero === 'Masculino' ? 'M' : 'F'}
+      </span>
+    </div>`).join('')}</div>`;
+}
+
 function renderTabla() {
   const tbody = document.getElementById('tableBody');
 
   if (!registrosFiltrados.length) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="8">
+        <td colspan="10">
           <div class="empty-state">
             <div class="empty-icon">📋</div>
             <div class="empty-text">No hay registros que mostrar</div>
@@ -929,24 +956,20 @@ function renderTabla() {
       <td class="mono">${r.fechaHora}</td>
       <td class="bold">${r.nombre} ${r.apellido}</td>
       <td class="mono">${r.numSocio}</td>
-      <td>${r.numMesa}</td>
-      <td>
-        <span class="badge ${r.tieneInvitados === 'Sí' ? 'badge-si' : 'badge-no'}">
-          ${r.tieneInvitados}
-        </span>
+      <td>${r.zona || '—'}</td>
+      <td>${r.numMesa || '—'}</td>
+      <td style="text-align:center;">
+        ${r.cantSociosInv
+          ? `<span class="badge badge-si">${r.cantSociosInv}</span>`
+          : '<span class="badge badge-no">0</span>'}
       </td>
-      <td>${r.cantInvitados || '—'}</td>
-      <td>
-        <div class="guest-list">
-          ${r.invitados.map(inv => `
-            <div class="guest-item">
-              ${inv.nombre} ${inv.apellido}
-              <span class="badge ${inv.genero === 'Masculino' ? 'badge-m' : 'badge-f'}">
-                ${inv.genero === 'Masculino' ? 'M' : 'F'}
-              </span>
-            </div>`).join('') || '<span style="color:var(--gray-500);font-size:11px;">—</span>'}
-        </div>
+      <td>${guestListHTML(r.sociosInvitados)}</td>
+      <td style="text-align:center;">
+        ${r.cantInvNoSocios
+          ? `<span class="badge" style="background:rgba(212,43,43,0.15);color:#FC8181;border:1px solid rgba(212,43,43,0.25);">${r.cantInvNoSocios}</span>`
+          : '<span class="badge badge-no">0</span>'}
       </td>
+      <td>${guestListHTML(r.invitadosNoSocios)}</td>
     </tr>`).join('');
 }
 
@@ -957,7 +980,7 @@ function filtrar() {
     registrosFiltrados = [...todosLosRegistros];
   } else {
     registrosFiltrados = todosLosRegistros.filter(r =>
-      `${r.nombre} ${r.apellido} ${r.numSocio} ${r.numMesa}`.toLowerCase().includes(q)
+      `${r.nombre} ${r.apellido} ${r.numSocio} ${r.zona} ${r.numMesa}`.toLowerCase().includes(q)
     );
   }
   actualizarStats();
@@ -971,44 +994,71 @@ function exportarExcel() {
   const wb = XLSX.utils.book_new();
 
   // Hoja 1: Socios
-  const h1 = [['#','Fecha y Hora','Nombre','Apellido','N° Socio','N° Mesa','¿Lleva Invitados?','Cant. Invitados']];
-  todosLosRegistros.forEach((r,i) => h1.push([
-    i+1, r.fechaHora, r.nombre, r.apellido,
-    r.numSocio, r.numMesa, r.tieneInvitados, r.cantInvitados || 0
+  const h1 = [['#','Fecha y Hora','Nombre','Apellido','N° Socio','Zona','Mesa',
+                '¿Socios Inv.?','Cant. Socios Inv.','¿Inv. No Socios?','Cant. Inv. No Socios']];
+  todosLosRegistros.forEach((r, i) => h1.push([
+    i + 1, r.fechaHora, r.nombre, r.apellido, r.numSocio, r.zona, r.numMesa,
+    r.tieneSociosInv, r.cantSociosInv || 0,
+    r.tieneInvNoSocios, r.cantInvNoSocios || 0
   ]));
   const ws1 = XLSX.utils.aoa_to_sheet(h1);
-  ws1['!cols'] = [{wch:5},{wch:20},{wch:18},{wch:18},{wch:14},{wch:10},{wch:18},{wch:16}];
+  ws1['!cols'] = [{wch:5},{wch:20},{wch:18},{wch:18},{wch:12},{wch:10},{wch:8},{wch:14},{wch:16},{wch:16},{wch:18}];
   XLSX.utils.book_append_sheet(wb, ws1, 'Socios');
 
-  // Hoja 2: Invitados
-  const h2 = [['#','Fecha y Hora','Nombre Socio','N° Socio','Mesa','# Invitado','Nombre','Apellido','Género']];
-  let n = 1;
+  // Hoja 2: Socios Invitados
+  const h2 = [['#','Fecha y Hora','Nombre Socio','N° Socio','Zona','Mesa','#','Nombre','Apellido','Género']];
+  let n2 = 1;
   todosLosRegistros.forEach(r => {
-    r.invitados.forEach((inv,j) => {
-      h2.push([n++, r.fechaHora, `${r.nombre} ${r.apellido}`, r.numSocio, r.numMesa, j+1, inv.nombre, inv.apellido, inv.genero]);
+    r.sociosInvitados.forEach((inv, j) => {
+      h2.push([n2++, r.fechaHora, `${r.nombre} ${r.apellido}`, r.numSocio, r.zona, r.numMesa,
+               j + 1, inv.nombre, inv.apellido, inv.genero]);
     });
   });
-  if (h2.length === 1) h2.push(['—','—','Sin invitados registrados','—','—','—','—','—','—']);
+  if (h2.length === 1) h2.push(['—','—','Sin socios invitados registrados','—','—','—','—','—','—','—']);
   const ws2 = XLSX.utils.aoa_to_sheet(h2);
-  ws2['!cols'] = [{wch:5},{wch:20},{wch:22},{wch:14},{wch:8},{wch:10},{wch:18},{wch:18},{wch:12}];
-  XLSX.utils.book_append_sheet(wb, ws2, 'Invitados');
+  ws2['!cols'] = [{wch:5},{wch:20},{wch:24},{wch:12},{wch:10},{wch:8},{wch:5},{wch:18},{wch:18},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Socios Invitados');
 
-  // Hoja 3: Resumen
-  const conInv = todosLosRegistros.filter(r => r.tieneInvitados === 'Sí').length;
-  const totInv = todosLosRegistros.reduce((s,r) => s + (r.cantInvitados||0), 0);
-  const ws3 = XLSX.utils.aoa_to_sheet([
+  // Hoja 3: Invitados No Socios
+  const h3 = [['#','Fecha y Hora','Nombre Socio','N° Socio','Zona','Mesa','#','Nombre','Apellido','Género']];
+  let n3 = 1;
+  todosLosRegistros.forEach(r => {
+    r.invitadosNoSocios.forEach((inv, j) => {
+      h3.push([n3++, r.fechaHora, `${r.nombre} ${r.apellido}`, r.numSocio, r.zona, r.numMesa,
+               j + 1, inv.nombre, inv.apellido, inv.genero]);
+    });
+  });
+  if (h3.length === 1) h3.push(['—','—','Sin invitados no socios registrados','—','—','—','—','—','—','—']);
+  const ws3 = XLSX.utils.aoa_to_sheet(h3);
+  ws3['!cols'] = [{wch:5},{wch:20},{wch:24},{wch:12},{wch:10},{wch:8},{wch:5},{wch:18},{wch:18},{wch:12}];
+  XLSX.utils.book_append_sheet(wb, ws3, 'Invitados No Socios');
+
+  // Hoja 4: Resumen
+  const totSI = todosLosRegistros.reduce((s, r) => s + (r.cantSociosInv || 0), 0);
+  const totINS = todosLosRegistros.reduce((s, r) => s + (r.cantInvNoSocios || 0), 0);
+  let hombres = 0, mujeres = 0;
+  todosLosRegistros.forEach(r => {
+    [...r.sociosInvitados, ...r.invitadosNoSocios].forEach(inv => {
+      if (inv.genero === 'Masculino') hombres++;
+      else if (inv.genero === 'Femenino') mujeres++;
+    });
+  });
+  const ws4 = XLSX.utils.aoa_to_sheet([
     ['Reporte – Los Miserables', ''],
     ['Generado', new Date().toLocaleString('es-PA')],
-    ['',''],
+    ['', ''],
     ['Total Socios Registrados', todosLosRegistros.length],
-    ['Socios con Invitados', conInv],
-    ['Total Invitados', totInv],
-    ['Total Asistentes', todosLosRegistros.length + totInv],
+    ['Total Socios Invitados', totSI],
+    ['Total Invitados No Socios', totINS],
+    ['Total Asistentes', todosLosRegistros.length + totSI + totINS],
+    ['', ''],
+    ['Invitados Hombres', hombres],
+    ['Invitadas Mujeres', mujeres],
   ]);
-  ws3['!cols'] = [{wch:28},{wch:20}];
-  XLSX.utils.book_append_sheet(wb, ws3, 'Resumen');
+  ws4['!cols'] = [{wch:28},{wch:20}];
+  XLSX.utils.book_append_sheet(wb, ws4, 'Resumen');
 
-  const fecha = new Date().toLocaleDateString('es-PA').replace(/\//g,'-');
+  const fecha = new Date().toLocaleDateString('es-PA').replace(/\//g, '-');
   XLSX.writeFile(wb, `Admin_LosMiserables_${fecha}.xlsx`);
 }
 </script>
